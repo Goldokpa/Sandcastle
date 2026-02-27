@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "The AgentGateway Protocol — secure, scalable AI agent execution infrastructure"
 readme = "README.md"
 license = { text = "MIT" }
-authors = [{ name = "Gold Okpa", email = "gold@sandcastlehq.com" }]
+authors = [{ name = "Gold Okpa", email = "okpagold@gmail.com" }]
 keywords = [
     "ai", "agents", "llm", "sandbox", "infrastructure",
     "openai", "anthropic", "langchain", "gateway",
