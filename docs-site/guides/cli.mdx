@@ -76,6 +76,34 @@ sample process. Use Gateway Mode for production; then `identark audit list`
 shows the authoritative control-plane audit records.
 </Warning>
 
+### Promote the sample when you are ready to ship
+
+Store the provider credential in IdentArk first. Then pass the credential
+**reference**, not the provider key, to the promotion command:
+
+```bash
+identark promote --credential-ref vault://prod/openai
+python identark_gateway_sample.py
+identark audit list
+```
+
+Promotion registers (or reuses) one agent, creates its governed session, and
+mints a 15-minute `llm:invoke` capability bound to that agent. The capability
+is held in the OS keychain and never written to `.identark/config.toml`; the
+generated `identark_gateway_sample.py` uses `ControlPlaneGateway`, so the
+provider credential remains outside the agent process.
+
+To make one real governed call immediately, opt in explicitly:
+
+```bash
+identark promote --credential-ref vault://prod/openai --run
+```
+
+`--run` may incur a provider charge. When it completes, `identark audit list`
+shows the authoritative activity record. The capability cannot administer or
+read credentials, cannot target another agent's session, and expires
+automatically.
+
 ### Configure an existing project
 
 ```bash
