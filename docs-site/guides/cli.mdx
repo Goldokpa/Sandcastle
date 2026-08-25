@@ -114,6 +114,28 @@ shows the authoritative activity record. The capability cannot administer or
 read credentials, cannot target another agent's session, and expires
 automatically.
 
+### Export independently checkable approval evidence
+
+Once a governed workflow has made HITL decisions, a human account can export a
+portable evidence file for an auditor or customer to verify locally:
+
+```bash
+identark audit export --output identark-approval-evidence.json
+identark audit verify identark-approval-evidence.json
+```
+
+The bundle has the tool name, risk score, decision, timestamps, and hash links
+that the approval chain protects. It excludes tool arguments, prompts, outputs,
+provider credentials, and capability tokens. Verification recomputes every
+SHA-256 digest locally; it makes no API request.
+
+<Warning>
+This proves the integrity and order of records supplied in the bundle. It does
+not prove that the exporter included every historical record or independently
+attest the bundle's origin. Those stronger claims require a separately anchored
+or signed checkpoint.
+</Warning>
+
 ### Configure an existing project
 
 ```bash
