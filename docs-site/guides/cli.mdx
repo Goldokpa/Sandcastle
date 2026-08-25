@@ -49,6 +49,35 @@ image when you need a repeatable release.
 
 ## Set up an agent project
 
+### First run in five steps
+
+Choose a provider, generate a real sample agent, run it locally, and inspect a
+privacy-preserving record of that run:
+
+```bash
+identark init --provider openai
+pip install "identark[openai]"
+export OPENAI_API_KEY='…' # keep this in your shell, never in the project
+identark agent run identark_sample.py
+identark trail
+```
+
+`--provider` accepts `openai`, `anthropic`, or `ollama`. The generated sample
+makes one real provider call through `DirectGateway`; it does not use a fake
+response or browser simulation. `identark trail` verifies the hash-linked local
+record at `.identark/activity.jsonl`. That record contains only timestamp,
+provider, model, outcome, and estimated cost—never prompts, outputs, keys, or
+credential references—and Git ignores it automatically.
+
+<Warning>
+The local activity record is not the governed IdentArk audit trail. DirectGateway
+is a local-development helper, so its provider credential is available to the
+sample process. Use Gateway Mode for production; then `identark audit list`
+shows the authoritative control-plane audit records.
+</Warning>
+
+### Configure an existing project
+
 ```bash
 identark init
 identark credential add OPENAI_API_KEY --ref vault://prod/openai
@@ -103,6 +132,15 @@ identark approvals reject <approval-id> --reason "Unexpected production change"
 
 Approvals require an explicit command. A pending approval expires to **deny**;
 the CLI has no auto-approve mode.
+
+## Inspect governed activity
+
+```bash
+identark audit list
+```
+
+This is a read-only view of the control-plane audit log. It deliberately does
+not merge local development records with governed production activity.
 
 ## Next
 
