@@ -78,11 +78,21 @@ shows the authoritative control-plane audit records.
 
 ### Promote the sample when you are ready to ship
 
-Store the provider credential in IdentArk first. Then pass the credential
-**reference**, not the provider key, to the promotion command:
+Connect a normal API-key provider from the terminal. The command uses a hidden
+prompt, sends the key directly to the authenticated IdentArk vault endpoint,
+and returns only a vault reference. It never accepts the key as a command-line
+argument, prints it, or writes it to `.identark/config.toml`:
 
 ```bash
-identark promote --credential-ref vault://prod/openai
+identark credential connect openai
+# Paste the key twice into the hidden prompt.
+```
+
+Then pass the credential **reference**, not the provider key, to the promotion
+command:
+
+```bash
+identark promote --credential-ref secret/orgs/<org-id>/providers/openai --provider openai
 python identark_gateway_sample.py
 identark audit list
 ```
@@ -96,7 +106,7 @@ provider credential remains outside the agent process.
 To make one real governed call immediately, opt in explicitly:
 
 ```bash
-identark promote --credential-ref vault://prod/openai --run
+identark promote --credential-ref secret/orgs/<org-id>/providers/openai --provider openai --run
 ```
 
 `--run` may incur a provider charge. When it completes, `identark audit list`
