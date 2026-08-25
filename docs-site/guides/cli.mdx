@@ -124,6 +124,23 @@ identark audit export --output identark-approval-evidence.json
 identark audit verify identark-approval-evidence.json
 ```
 
+### Export risk and policy decision evidence (v2)
+
+For approvals created with decision evidence enabled, export the separate v2
+chain to independently check the risk rationale and policy outcome:
+
+```bash
+identark audit export --format v2 --output identark-decision-evidence.json
+identark audit verify identark-decision-evidence.json
+```
+
+V2 links each explanation to a v1 approval hash without changing historical
+v1 records. Verify the related v1 bundle separately when both the decision and
+its rationale matter. The v2 file contains only numeric risk factors,
+categorical indicators, and fingerprinted policy metadata; it excludes request
+arguments, prompts, outputs, credentials, capability tokens, and policy source
+text.
+
 The bundle has the tool name, risk score, decision, timestamps, and hash links
 that the approval chain protects. It excludes tool arguments, prompts, outputs,
 provider credentials, and capability tokens. Verification recomputes every
