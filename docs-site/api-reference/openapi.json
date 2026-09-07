@@ -4494,54 +4494,92 @@
     },
     "/v1/llm/invoke": {
       "post": {
-        "tags": [
-          "llm"
-        ],
-        "summary": "Invoke Llm",
         "operationId": "invoke_llm_v1_llm_invoke_post",
         "parameters": [
           {
-            "name": "authorization",
             "in": "header",
-            "required": true,
+            "name": "authorization",
+            "required": false,
             "schema": {
-              "type": "string",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Authorization"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "access_token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
             }
           }
         ],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/InvokeLLMRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/InvokeLLMResponse"
                 }
               }
-            }
+            },
+            "description": "Successful Response"
           },
           "422": {
-            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
-            }
+            },
+            "description": "Validation Error"
           }
-        }
+        },
+        "security": [
+          {
+            "ApiKeyBearer": []
+          },
+          {
+            "FirebaseBearer": []
+          },
+          {
+            "DashboardSession": []
+          }
+        ],
+        "summary": "Invoke Llm",
+        "tags": [
+          "llm"
+        ],
+        "x-identark-auth": "dashboard-or-api-key",
+        "x-identark-required-scopes": [
+          "llm:invoke"
+        ]
       }
     },
     "/v1/llm/stream": {
@@ -11752,7 +11790,25 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "A scoped `csk_` API key. Send as `Authorization: Bearer csk_\u2026`."
+        "description": "A scoped `csk_` API key. Send as `Authorization: Bearer csk_…`."
+      },
+      "ApiKeyBearer": {
+        "bearerFormat": "csk_…",
+        "description": "Scoped IdentArk API key for SDK and CLI requests.",
+        "scheme": "bearer",
+        "type": "http"
+      },
+      "FirebaseBearer": {
+        "bearerFormat": "Firebase ID token",
+        "description": "Firebase ID token for an authenticated dashboard user.",
+        "scheme": "bearer",
+        "type": "http"
+      },
+      "DashboardSession": {
+        "description": "Firebase session cookie set by the dashboard login flow.",
+        "in": "cookie",
+        "name": "access_token",
+        "type": "apiKey"
       }
     }
   },
